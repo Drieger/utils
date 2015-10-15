@@ -1,5 +1,10 @@
 import os
+import argparse
 import requests
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--new-project', type=str, dest='project_name')
+
 
 URLS = {}
 URLS['requirements'] = 'https://raw.githubusercontent.com/Drieger/utils/master/project-manager/requirements.txt'
@@ -24,6 +29,17 @@ def get_requirements(directory):
     else:
         print "Error: Couldn't retrieve requirements.txt"
 
+def make_project_directory(directory):
+    path = os.getcwd() + '/' + directory
+    if not os.path.exists(path):
+        print "Create project root folder -- OK"
+        os.makedirs(path)
+        return path
+    else:
+        raise Exception('Directory already exists')
 
 if __name__ == '__main__':
-    get_requirements(os.getcwd())
+    args = parser.parse_args()
+
+    root = make_project_directory(args.project_name)
+    get_requirements(root)
